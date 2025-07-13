@@ -9,7 +9,9 @@ pipeline {
   stages {
     stage('Checkout') {
       steps {
-        git branch: 'main', url: 'https://github.com/yourusername/terraform-ec2-deploy.git'
+        git branch: 'main',
+            credentialsId: 'github-access',
+            url: 'https://github.com/Rithish24-cloud/Terraform-jenkins.git'
       }
     }
 
@@ -21,14 +23,25 @@ pipeline {
 
     stage('Plan') {
       steps {
-        sh 'terraform plan -var="access_key=${AWS_ACCESS_KEY}" -var="secret_key=${AWS_SECRET_KEY}"'
+        sh '''
+          terraform plan \
+            -var="access_key=${AWS_ACCESS_KEY}" \
+            -var="secret_key=${AWS_SECRET_KEY}"
+        '''
       }
     }
 
     stage('Apply') {
       steps {
-        sh 'terraform apply -auto-approve -var="access_key=${AWS_ACCESS_KEY}" -var="secret_key=${AWS_SECRET_KEY}"'
+        sh '''
+          terraform apply -auto-approve \
+            -var="access_key=${AWS_ACCESS_KEY}" \
+            -var="secret_key=${AWS_SECRET_KEY}"
+        '''
       }
     }
   }
 }
+
+
+
